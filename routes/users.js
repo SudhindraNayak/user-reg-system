@@ -1,5 +1,4 @@
 var express = require('express');
-
 var router = express.Router();
 
 /* GET users listing. */
@@ -18,6 +17,7 @@ router.get('/login', function(req, res, next) {
   	'title':'Login'
   });
 });
+
 router.post('/register',function(req,res,next){
 	var name=req.body.name;
 	var email=req.body.email;
@@ -41,6 +41,10 @@ router.post('/register',function(req,res,next){
 	}*/
 
 //validation
+	console.log(req);
+	console.log(req.body.email);
+	console.log(req.body.password);
+	console.log(req.body.username);
 	req.checkBody('name','Name should not be empty').notEmpty();
 	req.checkBody('email','Email should not be empty').notEmpty();
 	req.checkBody('email','Email not valid').isEmail();
@@ -79,8 +83,8 @@ router.post('/register',function(req,res,next){
 		//success  message
 		req.flash('success','You are now registered and may log in');
 
-		req.location('/');
-		res.redirect();
+		/*req.location('/');
+		res.redirect();*/
 	}
 });
 
