@@ -1,6 +1,10 @@
 var express = require('express');
-var router = express.Router();
+var multer=require('multer');
 
+var router = express.Router();
+var upload = multer({ dest: './uploads' });
+
+var User = require('../models/user');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -18,7 +22,7 @@ router.get('/login', function(req, res, next) {
   });
 });
 
-router.post('/register',function(req,res,next){
+router.post('/register',upload.single('profileimage'),function(req,res,next){
 	var name=req.body.name;
 	var email=req.body.email;
 	var username=req.body.username;
@@ -27,7 +31,8 @@ router.post('/register',function(req,res,next){
 
 
 //check for image field
-	/*if(req.files.profileimage){
+	console.log(req.file)
+	if(req.file){
 		console.log('uploading file');
 
 		var profileimageOriginalname=req.files.profileimage.originalname;
@@ -38,13 +43,12 @@ router.post('/register',function(req,res,next){
 		var profileSize=req.files.profileimage.size;
 	} else{
 		var profileImageName='noImage.png';
-	}*/
+	}
 
 //validation
-	console.log(req);
-	console.log(req.body.email);
-	console.log(req.body.password);
-	console.log(req.body.username);
+	/*console.log(req.body.email);
+	console.log(req.body.password);*/
+	console.log(req.files);
 	req.checkBody('name','Name should not be empty').notEmpty();
 	req.checkBody('email','Email should not be empty').notEmpty();
 	req.checkBody('email','Email not valid').isEmail();
@@ -71,20 +75,20 @@ router.post('/register',function(req,res,next){
 			email:email,
 			username:username,
 			password:password,
-			profileimage:proofileImageName
+			profileimage:profileImageName
 		});
 
 		// create user 
-		/*User.createUser(newuser,function(err,user){
+		User.createUser(newuser,function(err,user){
 			if(err)throw err;
 			console.log(user);
-		});*/
+		});
 
 		//success  message
 		req.flash('success','You are now registered and may log in');
 
-		/*req.location('/');
-		res.redirect();*/
+		req.location('/');
+		res.redirect();
 	}
 });
 
